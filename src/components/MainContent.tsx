@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Task, Goal, Review } from '../App';
+import { Task, Goal, Review, Note } from '../App';
 import Calendar from './Calendar';
 import EisenhowerMatrix from './EisenhowerMatrix';
 import GoalsDashboard from './GoalsDashboard';
@@ -13,10 +13,12 @@ interface MainContentProps {
   tasks: Task[];
   goals: Goal[];
   reviews: Review[];
+  notes: Note[];
   onUpdateTask: (taskId: number, updates: Partial<Task>) => void;
   onUpdateGoal: (goalId: number, updates: Partial<Goal>) => void;
   onAddGoal: (goal: Omit<Goal, 'id' | 'progress' | 'status' | 'tasks'>) => void;
   onAddReview: (review: Omit<Review, 'id'>) => void;
+  onAddNotes: (notes: Note[]) => void;
 }
 
 const MainContent: React.FC<MainContentProps> = ({ 
@@ -24,10 +26,12 @@ const MainContent: React.FC<MainContentProps> = ({
   tasks, 
   goals, 
   reviews, 
+  notes,
   onUpdateTask, 
   onUpdateGoal, 
   onAddGoal, 
-  onAddReview 
+  onAddReview,
+  onAddNotes
 }) => {
   return (
     <main className="flex-1 p-4 overflow-y-auto">
@@ -100,7 +104,7 @@ const MainContent: React.FC<MainContentProps> = ({
       )}
       
       {view === 'Notes' && (
-        <Notes />
+        <Notes notes={notes} onAddNotes={onAddNotes} />
       )}
       
       {view === 'Reviews' && (

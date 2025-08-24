@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { gapi } from 'gapi-script';
+import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import MainContent from './components/MainContent';
@@ -59,6 +58,17 @@ export interface Review {
   nextActions: string[];
 }
 
+export interface Note {
+  id: string;
+  title: string;
+  content: string;
+  color: string;
+  isPinned: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  tags: string[];
+}
+
 function App() {
   const [view, setView] = useState('Dashboard');
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -67,19 +77,11 @@ function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
-  useEffect(() => {
-    const start = () => {
-      gapi.load('client:auth2', () => {
-        gapi.client.init({
-          clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-          scope: 'https://www.googleapis.com/auth/keep.readonly',
-          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/keep/v1/rest'],
-        });
-      });
-    };
-    start();
-  }, []);
+  const handleAddNotes = (newNotes: Note[]) => {
+    setNotes(prevNotes => [...newNotes, ...prevNotes]);
+  };
 
   const handleAddTask = (taskData: Omit<Task, 'id' | 'createdAt' | 'status' | 'subtasks' | 'goalId'>) => {
     const newTask: Task = {
@@ -208,10 +210,12 @@ function App() {
             tasks={tasks} 
             goals={goals}
             reviews={reviews}
+            notes={notes}
             onUpdateTask={handleUpdateTask}
             onUpdateGoal={handleUpdateGoal}
             onAddGoal={handleAddGoal}
             onAddReview={handleAddReview}
+            onAddNotes={handleAddNotes}
           />
         </div>
         <Modal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} title="Quick Add Task">

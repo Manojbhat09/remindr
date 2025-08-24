@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import KeepGoalImporter from './KeepGoalImporter';
+import KeepImporter from './KeepImporter';
 import { Goal, Task } from '../App';
 
 interface GoalsDashboardProps {
@@ -311,9 +311,10 @@ const GoalsDashboard: React.FC<GoalsDashboardProps> = ({ goals, tasks, onUpdateG
 
       {/* Import from Google Keep Modal */}
       {isImportingFromKeep && (
-        <KeepGoalImporter
+        <KeepImporter
           onImport={handleGoalsImported}
           onClose={() => setIsImportingFromKeep(false)}
+          importType="goal"
         />
       )}
     </div>

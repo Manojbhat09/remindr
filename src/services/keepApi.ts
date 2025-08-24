@@ -1,4 +1,5 @@
 import { gapi } from 'gapi-script';
+import { Note } from '../App';
 
 // Declare global gapi for TypeScript
 declare global {
@@ -173,18 +174,39 @@ class KeepApiService {
     return '30-day completion target';
   }
 
-  async importGoalsFromKeep(): Promise<KeepGoalData[]> {
+  transformKeepNoteToAppNote(note: KeepNote): Omit<Note, 'id' | 'createdAt' | 'updatedAt'> {
+    let content = '';
+    if (note.body?.text) {
+      content = note.body.text;
+    } else if (note.listContent && note.listContent.length > 0) {
+      content = note.listContent
+        .map(item => `${item.checked ? '☑' : '☐'} ${item.text || ''}`)
+        .join('\n');
+    }
+
+    return {
+      title: note.title || 'Untitled Note',
+      content: content,
+      color: '#ffffff', // Default color
+      isPinned: false, // Default value
+      tags: [], // Default value
+    };
+  }
+
+  async importFromKeep(type: 'goal' | 'note'): Promise<KeepGoalData[] | Omit<Note, 'id' | 'createdAt' | 'updatedAt'>[]> {
     try {
       await this.authenticate();
       const notes = await this.fetchNotes();
-      
-      // Filter notes that could be goals (have titles and some content)
-      const potentialGoals = notes.filter(note => 
-        note.title && 
-        (note.body?.text || (note.listContent && note.listContent.length > 0))
-      );
 
-      return potentialGoals.map(note => this.transformNoteToGoal(note));
+      if (type === 'goal') {
+        const potentialGoals = notes.filter(note =>
+          note.title &&
+          (note.body?.text || (note.listContent && note.listContent.length > 0))
+        );
+        return potentialGoals.map(note => this.transformNoteToGoal(note));
+      } else {
+        return notes.map(note => this.transformKeepNoteToAppNote(note));
+      }
     } catch (error) {
       console.error('Import failed:', error);
       throw error;

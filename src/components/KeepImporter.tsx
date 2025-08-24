@@ -1,19 +1,26 @@
 
 import React, { useState, useEffect } from 'react';
-import { Goal } from '../App';
+import { Goal, Note } from '../App';
 import keepApiService from '../services/keepApi';
+import { useGapi } from '../contexts/GapiContext';
 
-interface KeepGoalImporterProps {
-  onImport: (goals: Omit<Goal, 'id' | 'progress' | 'status' | 'tasks'>[]) => void;
+type Importable = Goal | Note;
+
+interface KeepImporterProps<T extends Importable> {
+  onImport: (items: Omit<T, 'id' | 'progress' | 'status' | 'tasks' | 'createdAt' | 'updatedAt'>[]) => void;
   onClose: () => void;
+  importType: 'goal' | 'note';
 }
 
-const KeepGoalImporter: React.FC<KeepGoalImporterProps> = ({ onImport, onClose }) => {
+const KeepImporter = <T extends Importable>({ onImport, onClose, importType }: KeepImporterProps<T>) => {
+  const { isGapiInitialized } = useGapi();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    if (!isGapiInitialized) return;
+
     // Check if user is already authenticated
     const checkAuth = async () => {
       try {
@@ -24,7 +31,7 @@ const KeepGoalImporter: React.FC<KeepGoalImporterProps> = ({ onImport, onClose }
       }
     };
     checkAuth();
-  }, []);
+  }, [isGapiInitialized]);
 
   const handleAuthClick = async () => {
     try {
@@ -45,10 +52,10 @@ const KeepGoalImporter: React.FC<KeepGoalImporterProps> = ({ onImport, onClose }
     try {
       setIsLoading(true);
       setError(null);
-      const importedGoals = await keepApiService.importGoalsFromKeep();
-      onImport(importedGoals);
+      const importedItems = await keepApiService.importFromKeep(importType);
+      onImport(importedItems as any);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to import goals from Google Keep. Please try again.';
+      const errorMessage = err instanceof Error ? err.message : `Failed to import ${importType}s from Google Keep. Please try again.`;
       setError(errorMessage);
       console.error('Import error:', err);
     } finally {
@@ -70,7 +77,7 @@ const KeepGoalImporter: React.FC<KeepGoalImporterProps> = ({ onImport, onClose }
           {!isAuthenticated ? (
             <button
               onClick={handleAuthClick}
-              disabled={isLoading}
+              disabled={isLoading || !isGapiInitialized}
               className="btn btn-primary w-full hover-lift hover-glow transition-all-smooth"
             >
               {isLoading ? (
@@ -78,7 +85,7 @@ const KeepGoalImporter: React.FC<KeepGoalImporterProps> = ({ onImport, onClose }
               ) : (
                 <span>🔐</span>
               )}
-              {isLoading ? 'Authenticating...' : 'Authenticate with Google'}
+              {isLoading ? 'Authenticating...' : !isGapiInitialized ? 'Initializing...' : 'Authenticate with Google'}
             </button>
           ) : (
             <button
@@ -91,7 +98,7 @@ const KeepGoalImporter: React.FC<KeepGoalImporterProps> = ({ onImport, onClose }
               ) : (
                 <span>📝</span>
               )}
-              {isLoading ? 'Importing...' : 'Import Goals from Keep'}
+              {isLoading ? `Importing ${importType}s...` : `Import ${importType === 'goal' ? 'Goals' : 'Notes'} from Keep`}
             </button>
           )}
           
@@ -108,4 +115,4 @@ const KeepGoalImporter: React.FC<KeepGoalImporterProps> = ({ onImport, onClose }
   );
 };
 
-export default KeepGoalImporter;
+export default KeepImporter;

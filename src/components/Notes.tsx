@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
+import { Note } from '../App';
+import KeepImporter from './KeepImporter';
 
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  color: string;
-  isPinned: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  tags: string[];
+interface NotesProps {
+  notes: Note[];
+  onAddNotes: (notes: Note[]) => void;
 }
 
-interface NotesProps {}
-
-const Notes: React.FC<NotesProps> = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
+const Notes: React.FC<NotesProps> = ({ notes, onAddNotes }) => {
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [isImportingFromKeep, setIsImportingFromKeep] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,63 +76,26 @@ const Notes: React.FC<NotesProps> = () => {
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       };
       
-      setNotes(prev => [newNote, ...prev]);
+      onAddNotes([newNote]);
       setFormData({ title: '', content: '', tags: '' });
       setSelectedColor('#ffffff');
       setIsAddingNote(false);
     }
   };
 
-  const handleImportFromKeep = async () => {
-    try {
-      setIsImportingFromKeep(true);
-      
-      // Simulate import process with sample data
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
-      
-      const sampleImportedNotes = [
-        {
-          title: 'Meeting Notes',
-          content: 'Discussion about project timeline and deliverables for Q4.',
-          color: noteColors[Math.floor(Math.random() * noteColors.length)],
-          tags: ['work', 'meeting'],
-          isPinned: false,
-        },
-        {
-          title: 'Shopping List',
-          content: 'Milk, bread, eggs, vegetables, and some snacks for the week.',
-          color: noteColors[Math.floor(Math.random() * noteColors.length)],
-          tags: ['personal', 'shopping'],
-          isPinned: true,
-        },
-        {
-          title: 'Project Ideas',
-          content: 'New features to consider: dark mode, mobile app, integration with calendar.',
-          color: noteColors[Math.floor(Math.random() * noteColors.length)],
-          tags: ['ideas', 'development'],
-          isPinned: false,
-        }
-      ];
-      
-      // Add imported notes to local state
-      const newNotes = sampleImportedNotes.map(note => ({
-        ...note,
-        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
-      
-      setNotes(prev => [...newNotes, ...prev]);
-      setIsImportingFromKeep(false);
-      
-      // Show success feedback
-      alert('Successfully imported 3 sample notes!');
-      
-    } catch (error) {
-      console.error('Import failed:', error);
-      setIsImportingFromKeep(false);
-      alert('Import failed. Please try again.');
-    }
+  const handleImportFromKeep = () => {
+    setIsImportingFromKeep(true);
+  };
+
+  const handleNotesImported = (importedNotes: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>[]) => {
+    const newNotes: Note[] = importedNotes.map(note => ({
+      ...note,
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }));
+    onAddNotes(newNotes);
+    setIsImportingFromKeep(false);
   };
 
   const togglePin = (noteId: string) => {
@@ -557,6 +513,15 @@ const Notes: React.FC<NotesProps> = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Import from Google Keep Modal */}
+        {isImportingFromKeep && (
+          <KeepImporter
+            onImport={handleNotesImported}
+            onClose={() => setIsImportingFromKeep(false)}
+            importType="note"
+          />
         )}
 
         {/* Add Note Modal - Google Keep Style */}
