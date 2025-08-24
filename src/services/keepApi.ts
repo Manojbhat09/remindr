@@ -48,29 +48,8 @@ class KeepApiService {
     this.scopes = 'https://www.googleapis.com/auth/keep.readonly';
   }
 
-  async initialize(): Promise<void> {
-    if (this.isInitialized) return;
-
-    try {
-      await gapi.load('client:auth2', async () => {
-        await gapi.client.init({
-          apiKey: this.apiKey,
-          clientId: this.clientId,
-          discoveryDocs: this.discoveryDocs,
-          scope: this.scopes,
-        });
-        this.isInitialized = true;
-      });
-    } catch (error) {
-      console.error('Failed to initialize Google API:', error);
-      throw new Error('Failed to initialize Google API');
-    }
-  }
-
   async authenticate(): Promise<boolean> {
     try {
-      await this.initialize();
-      
       // Check if auth2 is available
       if (!gapi.auth2) {
         throw new Error('Google Auth2 not available');
@@ -91,8 +70,6 @@ class KeepApiService {
 
   async fetchNotes(): Promise<KeepNote[]> {
     try {
-      await this.initialize();
-      
       if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
         throw new Error('User not authenticated');
       }

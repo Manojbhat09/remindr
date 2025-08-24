@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { gapi } from 'gapi-script';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import MainContent from './components/MainContent';
@@ -66,6 +67,19 @@ function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    const start = () => {
+      gapi.load('client:auth2', () => {
+        gapi.client.init({
+          clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+          scope: 'https://www.googleapis.com/auth/keep.readonly',
+          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/keep/v1/rest'],
+        });
+      });
+    };
+    start();
+  }, []);
 
   const handleAddTask = (taskData: Omit<Task, 'id' | 'createdAt' | 'status' | 'subtasks' | 'goalId'>) => {
     const newTask: Task = {
