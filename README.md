@@ -1,46 +1,125 @@
-# Getting Started with Create React App
+# Remindr - Productivity & Task Management App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive productivity app that implements proven productivity strategies to help you get things done effectively.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+### Core Productivity Strategies
 
-### `npm start`
+#### 1. **Eisenhower Matrix** 
+- Organize tasks by urgency and importance
+- Drag & drop tasks between quadrants
+- Visual priority management
+- Automatic priority updates based on placement
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### 2. **SMART Goals Management**
+- Create Specific, Measurable, Achievable, Relevant, and Time-bound goals
+- Track progress with visual progress bars
+- Goal status management (active, paused, completed)
+- Link goals to specific tasks
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+#### 3. **Task Breakdown & Subtasks**
+- Break complex tasks into manageable subtasks
+- Progress tracking for each task
+- Visual completion indicators
+- Smart filtering for complex/long-duration tasks
 
-### `npm test`
+#### 4. **Review & Reflection System**
+- Daily, weekly, and monthly reviews
+- Structured reflection prompts:
+  - Accomplishments ✅
+  - Challenges ⚠️
+  - Areas for Improvement 💡
+  - Next Actions 🎯
+- Track productivity trends over time
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 5. **Productivity Insights & Analytics**
+- Overall productivity score calculation
+- Task completion rates
+- Priority and complexity distribution
+- Goal progress tracking
+- Personalized recommendations
+- Productivity trend analysis
 
-### `npm run build`
+#### 6. **Enhanced Task Management**
+- Priority levels (urgent, high, medium, low)
+- Complexity assessment (simple, moderate, complex)
+- Time estimation and tracking
+- Task descriptions and metadata
+- Drag & drop calendar integration
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🎯 How to Use
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Getting Started
+1. **Dashboard**: Overview of your productivity metrics and recent activity
+2. **Calendar**: Schedule and organize tasks by time
+3. **Eisenhower Matrix**: Prioritize tasks by urgency and importance
+4. **Goals**: Set and track SMART goals
+5. **Task Breakdown**: Break complex tasks into subtasks
+6. **Reviews**: Regular reflection and planning sessions
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Productivity Workflow
+1. **Plan**: Use the Eisenhower Matrix to prioritize tasks
+2. **Break Down**: Convert complex tasks into subtasks
+3. **Execute**: Work on tasks with clear priorities
+4. **Review**: Regular reflection on progress and improvements
+5. **Adjust**: Update goals and priorities based on insights
 
-### `npm run eject`
+## 🛠️ Technical Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- **Frontend**: React 19 + TypeScript
+- **Styling**: Tailwind CSS
+- **Drag & Drop**: @dnd-kit
+- **State Management**: React Hooks
+- **UI Components**: Custom components with modern design
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 📱 UI Design Philosophy
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- **Clean & Modern**: Minimalist design focused on productivity
+- **Visual Hierarchy**: Clear information architecture
+- **Responsive**: Works on all device sizes
+- **Accessible**: High contrast and readable typography
+- **Interactive**: Smooth animations and feedback
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🚀 Getting Started
 
-## Learn More
+```bash
+# Install dependencies
+npm install
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Start development server
+npm start
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Build for production
+npm run build
+```
+
+## 💡 Productivity Tips
+
+- **Use the Eisenhower Matrix daily** to prioritize your most important tasks
+- **Break down complex projects** into 15-30 minute subtasks
+- **Set SMART goals** with specific, measurable criteria
+- **Review weekly** to identify patterns and improve your approach
+- **Track your productivity score** to measure improvement over time
+
+## 🔄 Regular Review Cycle
+
+- **Daily**: Quick task review and priority setting
+- **Weekly**: Progress review and next week planning
+- **Monthly**: Goal assessment and strategy adjustment
+
+## 📊 Productivity Metrics
+
+The app calculates your productivity score based on:
+- Task completion rate (40%)
+- Goal progress (30%)
+- Recent productivity (20%)
+- Priority balance (10%)
+
+## 🎨 Customization
+
+All components use Tailwind CSS classes for easy customization. The color scheme and layout can be adjusted by modifying the component files.
+
+---
+
+Built with ❤️ to help you achieve more with less stress.
